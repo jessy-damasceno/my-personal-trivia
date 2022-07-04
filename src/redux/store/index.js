@@ -2,28 +2,16 @@ import { applyMiddleware, legacy_createStore as createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import rootReducer from '../reducers';
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 
-function saveToLocalStorage(state) {
-  const serialisedState = JSON.stringify(state);
-  localStorage.setItem('persistantState', serialisedState);
-}
+const persistConfig = {
+  key: 'root',
+  storage,
+};
 
-function loadFromLocalStorage() {
-  try {
-    const serialisedState = localStorage.getItem('persistantState');
-    if (serialisedState === null) return undefined;
-    return JSON.parse(serialisedState);
-  } catch (e) {
-    return undefined;
-  }
-}
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store = createStore(
-  rootReducer,
-  loadFromLocalStorage(),
-  composeWithDevTools(applyMiddleware(thunk)),
-);
+export const store = createStore(persistedReducer, composeWithDevTools(applyMiddleware(thunk)));
 
-store.subscribe(() => saveToLocalStorage(store.getState()));
-
-export default store;
+export const persistor = persistStore(store);

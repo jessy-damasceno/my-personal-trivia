@@ -7,7 +7,7 @@ const INTIAL_STATE = {
   gravatarEmail: '',
 };
 
-const player = ({ type, payload }, state = INTIAL_STATE) => {
+const player = (state = INTIAL_STATE, { type, payload }) => {
   switch (type) {
     case SET_PLAYER:
       return {
