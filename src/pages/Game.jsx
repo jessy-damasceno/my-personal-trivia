@@ -1,13 +1,13 @@
-import { Component } from "react";
+import React, { Component } from 'react';
 
 class Game extends Component {
-  render() {
-    return (
-      <div>
+	render() {
+		return (
+			<div>
         Tela de jogo
-      </div>
-    )
-  }
+			</div>
+		);
+	}
 }
 
 export default Game;
