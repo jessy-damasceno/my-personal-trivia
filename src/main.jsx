@@ -13,12 +13,12 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <BrowserRouter>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+    <PersistGate loading={null} persistor={persistor}>
+      <Provider store={store}>
         <React.StrictMode>
           <App />
         </React.StrictMode>
-      </PersistGate>
-    </Provider>
+      </Provider>
+    </PersistGate>
   </BrowserRouter>,
 );

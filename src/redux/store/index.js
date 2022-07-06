@@ -10,8 +10,17 @@ const persistConfig = {
   storage,
 };
 
+// const setInitialStore = () => {
+//   const store = localStorage.getItem('persist:root');
+//   if (store) {
+//     return JSON.parse(store);
+//   }
+//   return null;
+// }
+
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = createStore(persistedReducer, composeWithDevTools(applyMiddleware(thunk)));
+// export const store = applyMiddleware(thunk)(createStore)(persistedReducer);
 
 export const persistor = persistStore(store);

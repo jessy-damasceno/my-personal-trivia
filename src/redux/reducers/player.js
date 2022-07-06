@@ -1,10 +1,11 @@
-import { SET_PLAYER } from '../actions';
+import { SET_PLAYER, SET_TOKEN } from '../actions';
 
 const INTIAL_STATE = {
   name: '',
   assertions: 0,
   score: 0,
   gravatarEmail: '',
+  token: '',
 };
 
 const player = (state = INTIAL_STATE, { type, payload }) => {
@@ -14,6 +15,11 @@ const player = (state = INTIAL_STATE, { type, payload }) => {
         ...state,
         name: payload.name,
         gravatarEmail: payload.email,
+      };
+    case SET_TOKEN:
+      return {
+        ...state,
+        token: payload,
       };
     default:
       return {

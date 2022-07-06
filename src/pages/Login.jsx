@@ -1,40 +1,27 @@
 import { Component } from 'react';
+import { connect } from 'react-redux';
 import {
-  Avatar, Button, FormControlLabel, Checkbox, Link, Paper, Box,
+  Avatar, Button, Link, Paper, Box,
   CssBaseline, TextField, Grid, Typography
 } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { getToken } from '../redux/actions';
+import Copyright from '../components/Copyright';
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      light: '#9500ae',
-      main: '#d500f9',
-      dark: '#dd33fa',
-      contrastText: '#fff',
-    },
-    secondary: {
-      light: '#ff7961',
-      main: '#f44336',
-      dark: '#ba000d',
-      contrastText: '#000',
-    },
-  },
-});
+const regexEmail = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
 
 class Login extends Component {
   state = {
     name: '',
     email: '',
+    isDisabled: false,
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    console.log({
-      name: data.get('name'),
-      email: data.get('email'),
-    });
+  handleClick = () => {
+    const { setPlayerAction, getTokenAction, history } = this.props;
+    const { name, email } = this.state;
+    
+    getTokenAction(name, email);
+    history.push('/create-game');
   }
 
   handleChange = ({target}) => {
@@ -44,15 +31,19 @@ class Login extends Component {
 
   render() {
     const { name, email } = this.state;
+    let { isDisabled } = this.state;
+
+    if (name.length >= 3 && email.match(regexEmail)) {
+      isDisabled = true;
+    };
 
     return (
-      <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
           item
           xs={false}
-          sm={4}
+          sm={5}
           md={7}
           sx={{
             backgroundImage: 'url(https://static.vecteezy.com/ti/vetor-gratis/p3/107544-illustrartion-de-texto-de-trivia-vetor.jpg)',
@@ -63,7 +54,7 @@ class Login extends Component {
             backgroundPosition: 'center',
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid item xs={12} sm={7} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
               my: 8,
@@ -71,13 +62,14 @@ class Login extends Component {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              width: 'auto',
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: 'primary.light' }} />
             <Typography component="h1" variant="h5">
               Log in
             </Typography>
-            <Box component="form" noValidate onSubmit={this.handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -89,6 +81,7 @@ class Login extends Component {
                 id="name"
                 placeholder="Type your username"
                 autoComplete="email"
+                helperText="Your name or username"
                 autoFocus
               />
               <TextField
@@ -102,16 +95,19 @@ class Login extends Component {
                 type="text"
                 id="email"
                 placeholder="Type your e-mail"
+                helperText="Enter a valid e-mail address"
                 autoComplete="current-email"
               />
               <Button
-                type="submit"
+                type="button"
                 color="primary"
                 fullWidth
                 variant="contained"
+                onClick={ this.handleClick}
+                disabled={ !isDisabled }
                 sx={{ mt: 3, mb: 2 }}
               >
-                Start play!
+                Create a game!
               </Button>
               <Grid container>
                 <Grid item xs>
@@ -119,17 +115,18 @@ class Login extends Component {
                     Create a Gravatar here.
                   </Link>
                 </Grid>
-                <Grid item>
-                </Grid>
               </Grid>
-              {/* <Copyright sx={{ mt: 5 }} /> */}
+              <Copyright sx={{ mt: 5 }} />
             </Box>
           </Box>
         </Grid>
       </Grid>
-    </ThemeProvider>
     );
   }
 }
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  getTokenAction: (name, email) => dispatch(getToken(name, email)),
+});
+
+export default connect(null, mapDispatchToProps)(Login);
