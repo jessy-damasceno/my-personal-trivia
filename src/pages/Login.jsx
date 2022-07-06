@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
 	Avatar, Button, Link, Paper, Box,
 	CssBaseline, TextField, Grid, Typography
@@ -130,3 +131,10 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(null, mapDispatchToProps)(Login);
+
+Login.propTypes = {
+	getTokenAction: PropTypes.func.isRequired,
+	history: PropTypes.shape({
+		push: PropTypes.func,
+	}).isRequired,
+};
